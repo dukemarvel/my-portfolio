@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -9,6 +12,8 @@ const navItems = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050816]/90 backdrop-blur-xl">
       <div className="mx-auto flex h-24 w-full max-w-7xl items-center justify-between px-6 md:px-10">
@@ -25,7 +30,10 @@ export default function Header() {
         <div className="flex items-center justify-end gap-6 md:gap-10">
           <nav className="hidden items-center gap-8 lg:flex">
             {navItems.map((item) => {
-              const isActive = item.label === "Home";
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
               return (
                 <Link
@@ -33,7 +41,7 @@ export default function Header() {
                   href={item.href}
                   className="group relative text-base font-semibold text-white/85 transition hover:text-white"
                 >
-                  <span>{item.label}</span>
+                  <span className={isActive ? "text-white" : undefined}>{item.label}</span>
 
                   <span
                     className={`absolute -bottom-7 left-1/2 h-px -translate-x-1/2 rounded-full bg-cyan-300/90 shadow-[0_0_18px_rgba(103,232,249,0.9)] transition-all duration-300 ${
